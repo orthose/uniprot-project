@@ -37,7 +37,9 @@ class ProtName:
                                     + " WHERE prot_name=:prot_name " \
                                     + " AND name_kind=:name_kind"\
                                     + " AND name_type=:name_type")
-            curDB.execute (None, {'prot_name': self._name, 'name_kind': self._name_kind,'name_type': self._name_type})               
+            curDB.execute (None, {'prot_name': self._name,
+                                    'name_kind': self._name_kind,
+                                    'name_type': self._name_type})               
             raw = curDB.fetchone ()
             if raw != None:
                 prot_name_id = raw[0]
@@ -52,7 +54,10 @@ class ProtName:
                                 + " (seq_prot_names.NEXTVAL, :prot_name, " \
                                 + " :name_kind,:name_type) " \
                                 + " RETURNING prot_name_id INTO :ids")
-                curDB.execute (None, {'prot_name': self._name, 'name_kind': self._name_kind,':name_type': self._name_type  , 'ids': idP})
+                curDB.execute (None, {'prot_name': self._name, 
+                                        'name_kind': self._name_kind,
+                                        'name_type': self._name_type, 
+                                        'ids': idP})
                 prot_name_id = idP.getvalue()[0]
                     
         return prot_name_id 

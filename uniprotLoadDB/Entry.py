@@ -143,6 +143,6 @@ class Entry:
         for go in self._dbRefs:
             go.insertDB(curDB, self._accession)
 
-        # Ajout des porteines (sequence, noms ...)
+        # Ajout des proteines (sequence, noms ...)
         self._protein.insertDB (curDB, self._accession)
         

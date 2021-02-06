@@ -45,18 +45,25 @@ class Protein:
     def insertDB (self, curDB, accession):
         
         if Protein.DEBUG_INSERT_DB:
-            #### TODO : Inserer la proteine et ses caracteristiques
-            ####          ####
-            #### FIN TODO ####
-            
+            # Inserer la proteine et ses caracteristiques
+            curDB.prepare("INSERT INTO proteins " \
+                                + "(seq, seqLength, seqMass) " \
+                                + " values " \
+                                + " (:seq, :seqLength, :seqMass)")
+            curDB.execute (None, {'seq': self._seqTxt, 
+                                    'seqLength': self._seqLength,
+                                    'seqMass': self._seqMass})
                 
             if ProtName.DEBUG_INSERT_DB:
                 for n in self._names:
                     protNameId = n.insertDB (curDB)
-                    #### TODO : inserer le lien entre la proteine et le nom 
-                    #### de proteine, l'identifiant de nom de proteine a ete 
-                    #### retourne par n.insertDB (curDB) et est dans protNameId
-                    ####          ####
-                    #### FIN TODO ####
-                    pass
+                    # inserer le lien entre la proteine et le nom 
+                    # de proteine, l'identifiant de nom de proteine a ete 
+                    # retourne par n.insertDB (curDB) et est dans protNameId
+                    curDB.prepare("INSERT INTO prot_name_2_prot " \
+                                + "(accession, prot_name_id) " \
+                                + " values " \
+                                + " (:accession, :prot_name_id)")
+                    curDB.execute (None, {'accession': accession, 
+                                            'prot_name_id': protNameId})
 

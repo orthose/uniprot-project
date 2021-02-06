@@ -29,7 +29,9 @@ class Keyword:
         curDB.execute (None, {'kwId': self._kwId })
         raw = curDB.fetchone ()
         if raw == None:
-            if Keyword.DEBUG_INSERT_DB:  # Insérer le keyword s'il n'existe pas  Cf. exemple de la classe Gene si besoin
+            # Insérer le keyword s'il n'existe pas
+            # Cf. exemple de la classe Gene si besoin
+            if Keyword.DEBUG_INSERT_DB:
                 curDB.prepare("INSERT INTO keywords " \
                                 + "(kw_id, kw_label) " \
                                 + " values " \
