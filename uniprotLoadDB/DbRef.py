@@ -15,12 +15,12 @@ class DbRef:
     def __init__(self, typeRef, ref):
         self._ref = ref
         self._typeRef = typeRef
-    
-    def insertDB (self, curDB, accession):
-        
+
+    def insertDB (self, curDB, accession):  
         if DbRef.DEBUG_INSERT_DB:
-            #### TODO : Insertion dbref ####
-            ####          ####
-            #### FIN TODO ####
-            pass
-            
+            curDB.prepare("INSERT INTO comments " \
+                            + "(accession,db_type,db_ref) " \
+                            + "values " \
+                            + "(:accession,:typeRef," \
+                            + ":ref)")
+            curDB.execute(None, {'accession':accession, 'typeRef': self._typeRef, 'ref':self._ref})
