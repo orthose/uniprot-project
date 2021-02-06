@@ -26,27 +26,34 @@ class ProtName:
     @param curDb: Curseur sur la base de donnees oracle 
     @return identifiant du gene en base de donnees
     ''' 
+
+    # Recuperer l'identifiant de nom de proteine  s'il existe 
     def insertDB(self, curDB):
         prot_name_id=-1
-        
-        #### TODO : Recuperer l'identifiant de nom de proteine 
-        #### s'il existe 
-        #### Cf. la classe Gene pour un exemple si besoin
-        ####          ####
-        #### FIN TODO ####
-        
-               
-        raw = curDB.fetchone ()
-        if raw != None:
-            prot_name_id = raw[0]
-        else:
-            if ProtName.DEBUG_INSERT_DB:
-                #### TODO : Inserer le nom de proteine dans la table
-                #### en utilisant la séquence oracle seq_prot_names
-                #### pour avoir l'identifiant. Affecter le résultat 
-                #### a la variable prot_name_id
-                #### Cf. classe Gene pour un exemple
-                ####          ####
-                #### FIN TODO ####
-                pass
+
+        if ProtName.DEBUG_INSERT_DB:
+            curDB.prepare ("SELECT prot_name_id " \
+                                    + " FROM protein_names " \
+                                    + " WHERE prot_name=:prot_name " \
+                                    + " AND name_kind=:name_kind"\
+                                    + " AND name_type=:name_type")
+            curDB.execute (None, {'prot_name': self._name, 'name_kind': self._name_kind,'name_type': self._name_type})               
+            raw = curDB.fetchone ()
+            if raw != None:
+                prot_name_id = raw[0]
+            else:   #Inserer le nom de proteine dans la table
+                    # en utilisant la séquence oracle seq_prot_names
+                    # pour avoir l'identifiant. Affecter le résultat 
+                    # a la variable prot_name_id
+                idP =curDB.var(cx_Oracle.NUMBER)
+                curDB.prepare("INSERT INTO protein_names " \
+                                + "(prot_name_id, prot_name, name_kind,name_type) " \
+                                + " values " \
+                                + " (seq_prot_names.NEXTVAL, :prot_name, " \
+                                + " :name_kind,:name_type) " \
+                                + " RETURNING prot_name_id INTO :ids")
+                curDB.execute (None, {'prot_name': self._name, 'name_kind': self._name_kind,':name_type': self._name_type  , 'ids': idP})
+                prot_name_id = idP.getvalue()[0]
+                    
         return prot_name_id 
+

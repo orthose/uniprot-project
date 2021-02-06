@@ -18,7 +18,7 @@ class DbRef:
 
     def insertDB (self, curDB, accession):  
         if DbRef.DEBUG_INSERT_DB:
-            curDB.prepare("INSERT INTO comments " \
+            curDB.prepare("INSERT INTO dbRef " \
                             + "(accession,db_type,db_ref) " \
                             + "values " \
                             + "(:accession,:typeRef," \
