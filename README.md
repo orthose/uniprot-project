@@ -37,6 +37,9 @@ Option Bio-Informatique
 * Pour connaître le nom des tables
 `SQL> select table_name from user_tables;`
 
+* Pour voir si les tables sont remplies
+`SQL> @quickCheck`
+
 # Remplissage des tables
 
 * Paramétrer le fichier config.txt
