@@ -1,0 +1,15 @@
+[ORACLE]
+USER=c##logincourt_a
+PASSWD=logincourt_a
+SID=dbinfo
+[PERSIST]
+Comment=FALSE
+DbRef=FALSE
+Entry=FALSE
+GeneName=FALSE
+Keyword=FALSE
+Protein=FALSE
+ProtName=FALSE
+[LOADFILES]
+FILE1=examples/exemplesDonnees.xml
+FILE2=examples/exemplesDonnees2.xml
