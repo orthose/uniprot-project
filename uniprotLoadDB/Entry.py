@@ -124,20 +124,28 @@ class Entry:
         for geneName in self._geneNames:
             geneNameId = geneName.insertDB (curDB)
             if GeneName.DEBUG_INSERT_DB:
-                #### TODO : Inserer le lien entre entry et gene_name ####
-                ####          ####
-                #### FIN TODO ####
-                pass
+                # Inserer le lien entre entry et gene_name
+                curDB.prepare("INSERT INTO entry_2_gene_name " \
+                                + "(accession, gene_name_id) " \
+                                + " values " \
+                                + " (:accession, :gene_name_id) ")
+                curDB.execute (None, {'accession': self._accession,
+                                        'gene_name_id': geneNameId})
+                
         
         
         # Ajout des mots cles 
         for kw in self._keywords:
-            kw.insertDB(curDB)
+            keywordId = kw.insertDB(curDB)
             if Keyword.DEBUG_INSERT_DB:
-                #### TODO : Inserer le lien entre entry et keywords ####
-                ####          ####
-                #### FIN TODO ####
-                pass
+                # Inserer le lien entre entry et keywords 
+                curDB.prepare("INSERT INTO entries_2_keywords " \
+                                + "(accession, kw_id) " \
+                                + " values " \
+                                + " (:accession, :kw_id) ")
+                curDB.execute (None, {'accession': self._accession,
+                                        'kw_id': keywordId})
+                
         
         # Ajout des references a des bases tierces
         for go in self._dbRefs:
