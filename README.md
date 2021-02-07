@@ -38,7 +38,7 @@ Option Bio-Informatique
 `SQL> select table_name from user_tables;`
 
 * Pour voir si les tables sont remplies
-`SQL> @quickCheck`
+`SQL> @test`
 
 # Remplissage des tables
 
