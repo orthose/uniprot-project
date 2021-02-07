@@ -47,10 +47,11 @@ class Protein:
         if Protein.DEBUG_INSERT_DB:
             # Inserer la proteine et ses caracteristiques
             curDB.prepare("INSERT INTO proteins " \
-                                + "(seq, seqLength, seqMass) " \
+                                + "(accession, seq, seqLength, seqMass) " \
                                 + " values " \
-                                + " (:seq, :seqLength, :seqMass)")
-            curDB.execute (None, {'seq': self._seqTxt, 
+                                + " (:accession, :seq, :seqLength, :seqMass)")
+            curDB.execute (None, {'accession': accession,
+                                    'seq': self._seqTxt, 
                                     'seqLength': self._seqLength,
                                     'seqMass': self._seqMass})
                 
