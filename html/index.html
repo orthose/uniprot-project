@@ -1,15 +1,16 @@
 <html>
   <head>
     <link rel="stylesheet" href="style.css" type="text/css" />
-    Premier formulaire
+    <meta charset="utf-8">
+   <title>  </title>
   </head>
   <body>
-    <h2>Formulaire</h2>
+    <h2> Bienvenu sur le site de recherche </h2>
     <hr/>
-    <form method="post" action="testBioSimple.php">
-    accession a trouver :
-      <input type="text" name="accession"> </input> <br>
-      <input type="submit" name="submit" value="envoyer"> </input>
+    <form method="get" action="view_entry.php">
+   Entrer un numéro d'accession valide
+      <input type="text" name="accession" required/> 
+      <input type="submit" name="submit" value="Info Entry">
     </form>
   </body>
 </html>
