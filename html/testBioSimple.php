@@ -8,7 +8,7 @@
     // Récupérer dans des variables locales les paramètres du formulaire
     $ac = $_REQUEST['accession'];
 
-    $connexion = oci_connect('c##pandrie_a', 'pandrie_a', 'dbinfo');
+    $connexion = oci_connect('c##login_a', 'login_a', 'dbinfo');
     $txtReq = " select dateCreat, dataset "
       ."from entries e "."where e.accession = :acces ";
     // Pour débugger on affiche le texte de la requête:
