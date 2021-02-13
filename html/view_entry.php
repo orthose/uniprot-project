@@ -1,12 +1,22 @@
 <html>
-  <head> 
+  <head>
+    <meta charset="utf-8">
     <link rel="stylesheet" href="style.css" type="text/css" />
-    <title> View Entry </title> 
+    <title>Recherche des Entrées Uniprot</title> 
   </head>
   <body>
-    
+    <h1>Recherche par Entrée</h1><hr>
+    <form method="get" action="view_entry.php">
+      Entrer un numéro d'accession valide
+      <input type="text" name="accession" > 
+      <input type="submit" name="submit" value="Rechercher">
+    </form>
+    <a href="filter_entry.php">Recherche par filtrage</a>
     <?php
-    $connexion = oci_connect('c##jmarkan_a', 'jmarkan_a', 'dbinfo');
+    
+    require("config.php");
+    $connexion = oci_connect($USER, $PASSWD, 'dbinfo');
+    
     if(array_key_exists('accession', $_GET)){
         $ac = $_REQUEST['accession'];
         if(checkAccesion($ac,$connexion)){
@@ -22,7 +32,7 @@
             print("<h1> Mauvais numéro d'accession");
         }
     }
-   
+     
 
     function checkAccesion($accession,$connexion){
 

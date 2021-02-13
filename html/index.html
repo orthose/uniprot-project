@@ -5,12 +5,24 @@
    <title>  </title>
   </head>
   <body>
-    <h2> Bienvenu sur le site de recherche </h2>
-    <hr/>
+    <h1>Bienvenue sur le site de recherche</h1><hr>
+    
+    <h2>Recherche par Entrée</h2>
     <form method="get" action="view_entry.php">
-   Entrer un numéro d'accession valide
+      Entrer un numéro d'accession valide
       <input type="text" name="accession" required/> 
-      <input type="submit" name="submit" value="Info Entry">
+      <input type="submit" name="submit" value="Rechercher">
+    </form>
+    
+    <h2>Recherche par filtrage</h2>
+    <form method="get" action="filter_entry.php">
+      <label>Nom du gène</label>
+      <input type="text" name="gene"><br>
+      <label>Nom de protéine</label>
+      <input type="text" name="protein"><br>
+      <label>Commentaire associé</label>
+      <input type="text" name="comment"><br>
+      <input type="submit" value="Rechercher">
     </form>
   </body>
 </html>

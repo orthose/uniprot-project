@@ -1,5 +1,6 @@
 <html>
   <head>
+    <meta charset="utf-8">
     <title>Recherche par filtrage des entrées Uniprot</title>
     <link rel="stylesheet" href="style.css" type="text/css"/>
   </head>
@@ -27,8 +28,9 @@
       oci_execute($ordre);
       $count = 0;
       while (($row = oci_fetch_array($ordre, OCI_BOTH)) != false) {
-        echo "<tr><td><input type='submit' value='"
-          .$row[0]."'></td><td>"
+        echo "<tr><td><button type='submit' name='accession' value='"
+          .$row[0]."'>"
+          .$row[0]."</button></td><td>"
           .$row[1]."</td></tr>";
         $count++;
       } 
@@ -43,12 +45,12 @@
     $protein_isset = isset($_REQUEST['protein']) && !empty($_REQUEST['protein']);
     $comment_isset = isset($_REQUEST['comment']) && !empty($_REQUEST['comment']);
     
-    // A compléter avec identifiant et mot de passe corrects
-    $connexion = oci_connect('c##login_a', 'login_a', 'dbinfo');
+    require("config.php");
+    $connexion = oci_connect($USER, $PASSWD, 'dbinfo');
     
     // Les entrées sont des boutons cliquables
     // qui mènent à la page de visualisation des entrées
-    echo "<form method='post' action='view_entry.php'>";
+    echo "<form method='get' action='view_entry.php'>";
     
     if ($gene_isset) {
       // Entête du tableau de résultat

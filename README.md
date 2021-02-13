@@ -54,5 +54,7 @@ Option Bio-Informatique
 `cp -r html ~/public_html`
 `mv ~/public_html/html ~/public_html/uniprot`
 
+* Configuration de Oracle : Éditez le fichier config.php
+
 * Connexion à la page web
-`http://tp-ssh1.dep-informatique.u-psud.fr/~logincourt/uniprot`
+`https://tp-ssh1.dep-informatique.u-psud.fr/~logincourt/uniprot`
