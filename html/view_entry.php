@@ -6,14 +6,32 @@
     <?php require("lib.php"); ?>
   </head>
   <body>
-    <h1>Recherche par Entrée</h1><hr>
+    <h1>Recherche par entrée</h1>
+        <div class="menu">
+            <ul>
+                <li> <a href="index.html"> Home </a></li>
+                <li> <a href="#"> Recherche par entrée </a></li>
+                <li><a href="filter_entry.php"> Recherche par filtre </a></li>
+            </ul>
+        </div>
+        
+    <hr>
+   <h3> Bienvenue dans l'outil de recherche par entrée de la base de données Uniprot. </h3>
+          
     <form method="get" action="view_entry.php">
-      Entrer un numéro d'accession valide
+      
+    <p> Entrer un numéro d'accession valide : </p>
       <input type="text" name="accession" value=<?=value_text("accession")?>> 
       <input type="submit" name="submit" value="Rechercher">
     </form>
-    <a href="filter_entry.php">Recherche par filtrage</a><br>
-    <a href=index.html>RETOUR</a>
+  
+    <p> Ou </p>
+    <form method="get" action="view_entry.php">
+        <p >Selectionner un numéro d'accession : </p>
+        <?php getAccession() ?>
+        <input type="submit" name="submit" value="Rechercher">
+    </form>
+   <hr>
     <?php
     
     require("config.php");
@@ -23,7 +41,16 @@
         $array_ac = checkAccesion($_REQUEST['accession'], $connexion);
         if (count($array_ac) == 1){
             $ac = $array_ac[0];
-            print("<h1> Résultat de la recherche : </h1>");
+            print("<h2> Résultat de la recherche pour le numéro d'accession " .  $ac   .": </h2>");
+
+            print("<h2>Resultat par catégorie :</h2>
+            <a href='#seq'>Sequence</a><br>
+            <a href='#prot'>Protein</a><br>
+            <a href='#gene'>Gene</a><br>
+            <a href='#cle'>Mot clés</a><br>
+            <a href='#comm'>Commentaire</a><br>
+            <a href='#GO'>Go</a><br>");
+               
             info_Seq($ac,$connexion);
             info_Prot($ac,$connexion);
             info_Gene($ac,$connexion);
@@ -33,8 +60,8 @@
             oci_close($connexion);
         }
         else if (count($array_ac) > 1) {
-          print("<p>Plusieurs entrées ont été trouvées.");
-          print("<form method='GET' action='view_entry.php'><table>");
+          print("<h2>Plusieurs entrées ont été trouvées : </h2>");
+          print("<form method='GET' action='view_entry.php'><table border=1>");
           print("<tr><th>Entrées</th></tr>");
           foreach ($array_ac as $index => $ac) {
             print(
@@ -45,10 +72,37 @@
           print("</table></form>");
         }
         else{
-            print("<h1> Mauvais numéro d'accession");
+            print("<h1> Mauvais numéro d'accession</h1>");
         }
     }
+
+    //recuperer les numéros d'accession pour les affichers dans un select
+    function getAccession(){
+        
      
+        require("config.php");
+        $connexion = oci_connect($USER, $PASSWD, 'dbinfo');
+        $txtReq = "select accession"." from  entries";
+
+
+        $ordre = oci_parse($connexion, $txtReq);
+
+       // oci_bind_by_name($ordre);
+
+        oci_execute($ordre);
+
+        print("<select name='accession'>");
+        while (($row = oci_fetch_array($ordre, OCI_BOTH)) !=false) {
+            
+          print("<option   value=".$row[0].">". $row[0] ."</option>") ;
+             
+        }
+        print("</select>");
+        oci_free_statement($ordre);
+        oci_close($connexion);
+
+     }
+
     // vérification de l'existance du numéros d'accession
     // return: array(accession)
     function checkAccesion($accession, $connexion){
@@ -84,10 +138,10 @@
 
         oci_execute($ordre);
         print("<h2> Informations sur la séquence :</h2><br>");
-        print("<table class='seq' width=70% border='1'><tr><th>Sequence</th><th>Longueur</th><th>Masse</th><th>reférence NCBI</th><tr>");
+        print("<table id='seq' width=70% border='1'><tr><th>Sequence</th><th>Longueur</th><th>Masse</th><th>reférence NCBI</th><tr>");
        
         while (($row = oci_fetch_array($ordre, OCI_BOTH)) !=false) {
-            //clob to string  : load() / read(2000)
+            //clob to string  : load()  
             $lien = "<a href=https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=".$row[3] ."> lien </a>";
             print("<tr><td>". $row[0] -> load() ."</td><td>". $row[1]  ."</td><td>". $row[2] ."</td><td> ". $lien ."</td></tr>");
         }
@@ -110,7 +164,7 @@
         oci_execute($ordre);
 
         print("<h2> Informations sur la protéine :</h2><br>");
-        print("<table class='prot' width=70%  border='1'><tr><th>Noms des proteins </th><th> Type de nom </th><th> Genre de nom</th><tr>");
+        print("<table id='prot' width=70%  border='1'><tr><th>Noms des proteins </th><th> Type de nom </th><th> Genre de nom</th><tr>");
 
        
         while (($row = oci_fetch_array($ordre, OCI_BOTH)) !=false) {
@@ -135,7 +189,7 @@
         oci_execute($ordre);
 
         print("<h2> Informations sur le gène :</h2><br>");
-        print("<table  class='gene' width=70%  border='1'><tr><th>Nom des gènes</th><th> Type de nom </th><tr>");
+        print("<table  id='gene' width=70%  border='1'><tr><th>Nom des gènes</th><th> Type de nom </th><tr>");
 
        
         while (($row = oci_fetch_array($ordre, OCI_BOTH)) !=false) {
@@ -160,7 +214,7 @@
         oci_execute($ordre);
 
         print("<h2> Mots-clés:</h2><br>");
-        print("<table class='kw_comment' width=70%  border='1'><tr><th> Id du mot clé </th><th> Mot clé </th><tr>");
+        print("<table id='cle' width=70%  border='1'><tr><th> Id du mot clé </th><th> Mot clé </th><tr>");
 
        
         while (($row = oci_fetch_array($ordre, OCI_BOTH)) !=false) {
@@ -183,7 +237,7 @@
         oci_execute($ordre);
 
         print("<h2> Commentaires :</h2><br>");
-        print("<table class='kw_comment' width=70%  border='1'><tr><th> Id du commentaire </th><th> Type de commentaire </th><th> Commentaire </th><tr>");
+        print("<table id='comm' width=70%  border='1'><tr><th> Id du commentaire </th><th> Type de commentaire </th><th> Commentaire </th><tr>");
        
         while (($row = oci_fetch_array($ordre, OCI_BOTH)) !=false) {
             print("<tr><td>". $row[0] ."</td><td>". $row[1]  ."</td><td>" . $row[2] ."</td></tr>");     
@@ -206,7 +260,7 @@
         oci_execute($ordre);
 
         print("<h2> Informations relatives aux termes GO  :</h2><br>");
-        print("<table class='kw_comment' width=70%  border='1'><tr><th>reférence GO</th><th> Lien  </th><tr>");
+        print("<table id='GO' width=70%  border='1'><tr><th>reférence GO</th><th> Lien  </th><tr>");
 
        
         while (($row = oci_fetch_array($ordre, OCI_BOTH)) !=false) {

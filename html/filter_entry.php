@@ -7,10 +7,19 @@
   </head>
 <body>
   <h1>Recherche par filtrage</h1>
-  <p>
+    <div class="menu">
+      <ul>
+        <li> <a href="index.html"> Home </a></li>
+        <li> <a href="view_entry.php"> Recherche par entrée </a></li>
+        <li><a href="#"> Recherche par filtre </a></li>
+      </ul>
+</div> 
+  <hr>
+  <h3>
     Bienvenue dans l'outil de recherche par filtrage
     de la base de données Uniprot.
-  </p>
+</h3>
+  <div class="filter">
   <form method="get" action="filter_entry.php">
     <label>Nom du gène</label>
     <input type="text" name="gene" value=<?=value_text("gene")?>><br>
@@ -20,9 +29,10 @@
     <input type="text" name="comment" value=<?=value_text("comment")?>><br>
     <input type="submit" value="Rechercher">
   </form>
-  <a href="view_entry.php">Recherche par Entrée</a><br>
-  <a href=index.html>RETOUR</a>
-  <table>
+</div>
+<div>
+  <br>
+  <table border=1>
     <?php
     
     // Exécute la requête et affiche les cases
@@ -32,6 +42,7 @@
       $count = 0;
       while (($row = oci_fetch_array($ordre, OCI_BOTH)) != false) {
         // Bouton cliquable pour accéder à la visualisation de l'entrée
+    
         echo "<tr><td><button type='submit' name='accession' value='"
           .$row[0]."'>"
           .$row[0]."</button></td><td>"
@@ -55,10 +66,17 @@
     // Les entrées sont des boutons cliquables
     // qui mènent à la page de visualisation des entrées
     echo "<form method='get' action='view_entry.php'>";
-    
+  
+    if($gene_isset || $protein_isset ||$comment_isset){
+      print("<h2>Résultats par catégorie :</h2>");
+    }
+
     if ($gene_isset) {
+     print( "<a href='#gene'>Gene</a><br>");
+   
       // Entête du tableau de résultat
-      echo "<tr><th>Entrée</th><th>Nom Gène</th></tr>";
+   
+      echo "<tr><th>Entrée</th><th id='gene'>Nom Gène</th></tr>";
       
       // Requête SQL en texte
       $txtReq = " SELECT entry_2_gene_name.accession, gene_names.gene_name "
@@ -76,7 +94,8 @@
     }
     
     if ($protein_isset) {
-      echo "<tr><th>Entrée</th><th>Nom Protéine</th></tr>";
+      print( "<a href='#prot'>Protein</a><br>");
+      echo "<tr><th>Entrée</th><th id='prot'>Nom Protéine</th></tr>";
         
       $txtReq = " SELECT prot_name_2_prot.accession, protein_names.prot_name "
         ." FROM protein_names, prot_name_2_prot "
@@ -89,7 +108,8 @@
     }
     
     if ($comment_isset) {
-      echo "<tr><th>Entrée</th><th>Commentaire</th></tr>";
+      print( "<a href='#comm'>Commentaire</a><br>");
+      echo "<tr><th>Entrée</th><th id='comm'>Commentaire</th></tr>";
         
       $txtReq = " SELECT DISTINCT accession, txt_c "
         ." FROM comments "
@@ -105,5 +125,6 @@
     
     ?>
   </table>
+  </div>
 </body>
 </html>
