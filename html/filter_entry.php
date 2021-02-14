@@ -3,6 +3,7 @@
     <meta charset="utf-8">
     <title>Recherche par filtrage des entrées Uniprot</title>
     <link rel="stylesheet" href="style.css" type="text/css"/>
+    <?php require("lib.php"); ?>
   </head>
 <body>
   <h1>Recherche par filtrage</h1>
@@ -12,13 +13,15 @@
   </p>
   <form method="get" action="filter_entry.php">
     <label>Nom du gène</label>
-    <input type="text" name="gene"><br>
+    <input type="text" name="gene" value=<?=value_text("gene")?>><br>
     <label>Nom de protéine</label>
-    <input type="text" name="protein"><br>
+    <input type="text" name="protein" value=<?=value_text("protein")?>><br>
     <label>Commentaire associé</label>
-    <input type="text" name="comment"><br>
+    <input type="text" name="comment" value=<?=value_text("comment")?>><br>
     <input type="submit" value="Rechercher">
   </form>
+  <a href="view_entry.php">Recherche par Entrée</a><br>
+  <a href=index.html>RETOUR</a>
   <table>
     <?php
     
@@ -28,6 +31,7 @@
       oci_execute($ordre);
       $count = 0;
       while (($row = oci_fetch_array($ordre, OCI_BOTH)) != false) {
+        // Bouton cliquable pour accéder à la visualisation de l'entrée
         echo "<tr><td><button type='submit' name='accession' value='"
           .$row[0]."'>"
           .$row[0]."</button></td><td>"
@@ -60,9 +64,7 @@
       $txtReq = " SELECT entry_2_gene_name.accession, gene_names.gene_name "
         ." FROM gene_names, entry_2_gene_name "
         // Recherche insensible à la casse
-        // La concaténation avec || est nécessaire pour que le binding
-        // soit accepté par Oracle (question de sécurité)
-        ." WHERE REGEXP_LIKE (gene_names.gene_name, '.*'||:gene||'.*', 'i') "
+        ." WHERE REGEXP_LIKE (gene_names.gene_name, :gene, 'i') "
         ." AND gene_names.gene_name_id = entry_2_gene_name.gene_name_id ";
         
       // Curseur vers la base
@@ -78,7 +80,7 @@
         
       $txtReq = " SELECT prot_name_2_prot.accession, protein_names.prot_name "
         ." FROM protein_names, prot_name_2_prot "
-        ." WHERE REGEXP_LIKE (protein_names.prot_name, '.*'||:protein||'.*', 'i') "
+        ." WHERE REGEXP_LIKE (protein_names.prot_name, :protein, 'i') "
         ." AND protein_names.prot_name_id = prot_name_2_prot.prot_name_id ";
       
       $ordre = oci_parse($connexion, $txtReq); 
@@ -91,7 +93,7 @@
         
       $txtReq = " SELECT DISTINCT accession, txt_c "
         ." FROM comments "
-        ." WHERE REGEXP_LIKE (txt_c, '.*'||:com||'.*', 'i') ";
+        ." WHERE REGEXP_LIKE (txt_c, :com, 'i') ";
       
       $ordre = oci_parse($connexion, $txtReq); 
       oci_bind_by_name($ordre, ":com", $_REQUEST['comment']);     
