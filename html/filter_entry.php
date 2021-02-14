@@ -1,24 +1,17 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Recherche par filtrage des entrées Uniprot</title>
+    <title>Recherche par filtrage Uniprot</title>
     <link rel="stylesheet" href="style.css" type="text/css"/>
     <?php require("lib.php"); ?>
   </head>
 <body>
   <h1>Recherche par filtrage</h1>
-    <div class="menu">
-      <ul>
-        <li> <a href="index.html"> Home </a></li>
-        <li> <a href="view_entry.php"> Recherche par entrée </a></li>
-        <li><a href="#"> Recherche par filtre </a></li>
-      </ul>
-</div> 
-  <hr>
+  <?php website_header(); ?>
   <h3>
     Bienvenue dans l'outil de recherche par filtrage
     de la base de données Uniprot.
-</h3>
+  </h3>
   <div class="filter">
   <form method="post" action="filter_entry.php">
     <label>Nom du gène</label>
@@ -29,9 +22,9 @@
     <input type="text" name="comment" value=<?=value_text("comment")?>><br>
     <input type="submit" value="Rechercher">
   </form>
-</div>
+  </div>
+  <hr>
 <div>
-  <br>
   <table border=1>
     <?php
     
@@ -67,7 +60,7 @@
     // qui mènent à la page de visualisation des entrées
     echo "<form method='post' action='view_entry.php'>";
   
-    if($gene_isset || $protein_isset ||$comment_isset){
+    if($gene_isset || $protein_isset || $comment_isset){
       print("<h2>Résultats par catégorie :</h2>");
     }
 
