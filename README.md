@@ -58,3 +58,27 @@ Option Bio-Informatique
 
 * Connexion à la page web
 `https://tp-ssh1.dep-informatique.u-psud.fr/~logincourt/uniprot`
+
+# Organisation du code
+
+* Le dossier uniprotLoadDB/ contient les classes Python correspondant
+aux tables du schéma de base de données. Elles sont utilisées pour
+le remplissage des tables à partir des fichiers XML.
+
+* Le dossier sql/ contient les scripts SQL de création, suppression
+et vidage des tables. Ainsi que ceux de requête et de test.
+
+* Le dossier html contient le code source HTML/PHP du site web.
+Le point d'entrée du site web est la page index.html.
+
+# Organisation du travail
+
+* Travail complémentaire des étudiants. 
+Répartition homogène du travail.
+
+* Aucune difficulté majeure rencontrée.
+Le code tourne bien.
+
+* Bogue anecdotique : Le binding par :comment
+dans le code PHP n'est pas accepté par Oracle.
+J'ai dû renommer en :com.
