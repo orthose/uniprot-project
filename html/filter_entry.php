@@ -20,7 +20,7 @@
     de la base de données Uniprot.
 </h3>
   <div class="filter">
-  <form method="get" action="filter_entry.php">
+  <form method="post" action="filter_entry.php">
     <label>Nom du gène</label>
     <input type="text" name="gene" value=<?=value_text("gene")?>><br>
     <label>Nom de protéine</label>
@@ -65,7 +65,7 @@
     
     // Les entrées sont des boutons cliquables
     // qui mènent à la page de visualisation des entrées
-    echo "<form method='get' action='view_entry.php'>";
+    echo "<form method='post' action='view_entry.php'>";
   
     if($gene_isset || $protein_isset ||$comment_isset){
       print("<h2>Résultats par catégorie :</h2>");

@@ -18,31 +18,42 @@
     <hr>
    <h3> Bienvenue dans l'outil de recherche par entrée de la base de données Uniprot. </h3>
           
-    <form method="get" action="view_entry.php">
+    <form method="post" action="view_entry.php">
       
     <p> Entrer un numéro d'accession valide : </p>
+    
       <input type="text" name="accession" value=<?=value_text("accession")?>> 
       <input type="submit" name="submit" value="Rechercher">
     </form>
   
     <p> Ou </p>
-    <form method="get" action="view_entry.php">
+    <form method="post" action="view_entry.php">
         <p >Selectionner un numéro d'accession : </p>
-        <?php getAccession() ?>
+        <?php 
+         //methode permettant d'afficher tous les numéros d'accessions dans un une balise <select>
+        getAccession()
+         ?>
         <input type="submit" name="submit" value="Rechercher">
     </form>
    <hr>
     <?php
-    
+
+    //fichier config.php à compléter avec votre login court et mot de passe 
     require("config.php");
     $connexion = oci_connect($USER, $PASSWD, 'dbinfo');
     
+    
     if(array_key_exists('accession', $_REQUEST)){
+        
         $array_ac = checkAccesion($_REQUEST['accession'], $connexion);
+        /*checkAccession est censé renvoyer un tableau à un élément
+         contenant l'accession demandé par l'utilisateur 
+        */
         if (count($array_ac) == 1){
             $ac = $array_ac[0];
             print("<h2> Résultat de la recherche pour le numéro d'accession " .  $ac   .": </h2>");
 
+            //renvoyé un petit "menu" pour acceder facilement aux section trouvé
             print("<h2>Resultat par catégorie :</h2>
             <a href='#seq'>Sequence</a><br>
             <a href='#prot'>Protein</a><br>
@@ -59,9 +70,12 @@
             info_termGo($ac,$connexion);
             oci_close($connexion);
         }
+        /*
+        cas ou le tableau renvoyé contient plus d'un numéro d'accession
+        */
         else if (count($array_ac) > 1) {
           print("<h2>Plusieurs entrées ont été trouvées : </h2>");
-          print("<form method='GET' action='view_entry.php'><table border=1>");
+          print("<form method='POST' action='view_entry.php'><table border=1>");
           print("<tr><th>Entrées</th></tr>");
           foreach ($array_ac as $index => $ac) {
             print(
@@ -71,6 +85,7 @@
           }
           print("</table></form>");
         }
+        // cas où il y aucun numéro d'accession similaire à celui demandé
         else{
             print("<h1> Mauvais numéro d'accession</h1>");
         }
@@ -86,8 +101,6 @@
 
 
         $ordre = oci_parse($connexion, $txtReq);
-
-       // oci_bind_by_name($ordre);
 
         oci_execute($ordre);
 
@@ -129,6 +142,9 @@
     // information sur la séquence d'une protein  
     function info_Seq($accession,$connexion){
 
+        /* Pour un accession donné ,on renvoye l'ensemble des informations liés à la séquence ,masse,longueur ,
+         et espèce de la protein lié à cette accession
+        */
         $txtReq = "select proteins.seq, proteins.seqLength, proteins.seqMass, entries.specie"
                 ." from  proteins,entries"
                 ." where entries.accession= :acces and proteins.accession = entries.accession";
@@ -138,10 +154,14 @@
 
         oci_execute($ordre);
         print("<h2> Informations sur la séquence :</h2><br>");
+        //on crée un tableau contenant les longueurs nécessaire
         print("<table id='seq' width=70% border='1'><tr><th>Sequence</th><th>Longueur</th><th>Masse</th><th>reférence NCBI</th><tr>");
        
         while (($row = oci_fetch_array($ordre, OCI_BOTH)) !=false) {
-            //clob to string  : load()  
+            /* clob to string  : load()  
+            Pour afficher le contenu d'une variable de type CLOB en php
+            une methode consiste à utiliser la methode load()
+            */
             $lien = "<a href=https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=".$row[3] ."> lien </a>";
             print("<tr><td>". $row[0] -> load() ."</td><td>". $row[1]  ."</td><td>". $row[2] ."</td><td> ". $lien ."</td></tr>");
         }
@@ -152,6 +172,11 @@
     //noms des protéines avec leurs types et sortes,
     function info_Prot($accession,$connexion){
 
+
+        /*
+         On selectionne le nom, le type de nom et le genre de nom d'une protein liés à une
+         accession donné
+        */
         $txtReq = "select protein_names.prot_name, protein_names.name_type,protein_names.name_kind" 
                 ." from protein_names , prot_name_2_prot"
                 ." where prot_name_2_prot.accession = :acces
@@ -176,7 +201,9 @@
      
      //noms des gènes et leurs types
      function info_Gene($accession,$connexion){  
-
+        /*
+        On renvoye le nom et le type du nom d'un gene pour un numéro d'accession donné
+        */
         $txtReq = "select gene_names.gene_name, gene_names.name_type"
                 ." from  entry_2_gene_name, gene_names"
                 ." where entry_2_gene_name.accession =:acces
@@ -199,9 +226,9 @@
         oci_free_statement($ordre);
      }
      
-     //mot clé  et leurs id liés au numéro d'accession
      function info_keyword($accession,$connexion){
-
+       
+     // on renvoye le ou les mots clés  et leurs id liés au numéro d'accession
         $txtReq ="select keywords.kw_id , keywords.kw_label"
                 ." from  keywords,entries_2_keywords"
                 ." where entries_2_keywords.accession = :acces
@@ -224,9 +251,9 @@
         oci_free_statement($ordre);
      }
      
-     // commentaire(s) lié(s) au numéro d'accessio
      function info_comment($accession,$connexion){
 
+             // commentaire(s) lié(s) au numéro d'accessio
         $txtReq ="select comments.comment_id, comments.type_c ,comments.txt_c"
                 ." from  comments"
                 ." where comments.accession = :acces";
@@ -246,9 +273,9 @@
         oci_free_statement($ordre);
      }
 
-     // information relative aux termes  GO 
      function info_termGo($accession,$connexion){ 
 
+             // information relative aux termes  GO pour un numéro d'accession donné
         $txtReq = "select dbref.db_ref" 
             ." from dbref"
             ." where dbref.accession= :acces" 
