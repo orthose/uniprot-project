@@ -7,15 +7,7 @@
   </head>
   <body>
     <h1>Recherche par entrée</h1>
-        <div class="menu">
-            <ul>
-                <li> <a href="index.html"> Home </a></li>
-                <li> <a href="#"> Recherche par entrée </a></li>
-                <li><a href="filter_entry.php"> Recherche par filtre </a></li>
-            </ul>
-        </div>
-        
-    <hr>
+    <?php website_header(); ?>
    <h3> Bienvenue dans l'outil de recherche par entrée de la base de données Uniprot. </h3>
           
     <form method="get" action="view_entry.php">
@@ -24,8 +16,6 @@
       <input type="text" name="accession" value=<?=value_text("accession")?>> 
       <input type="submit" name="submit" value="Rechercher">
     </form>
-  
-    <p> Ou </p>
     <form method="get" action="view_entry.php">
         <p >Selectionner un numéro d'accession : </p>
         <?php getAccession() ?>

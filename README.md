@@ -69,7 +69,7 @@ le remplissage des tables à partir des fichiers XML.
 et vidage des tables. Ainsi que ceux de requête et de test.
 
 * Le dossier html contient le code source HTML/PHP du site web.
-Le point d'entrée du site web est la page index.html.
+Le point d'entrée du site web est la page index.php.
 
 # Organisation du travail
 
