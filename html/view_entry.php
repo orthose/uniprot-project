@@ -178,7 +178,7 @@
 
         oci_execute($ordre);
 
-        print("<h2> Informations sur la protéine :</h2><br>");
+        print("<h2> Informations sur les protéines :</h2><br>");
         print("<table id='prot' width=70%  border='1'><tr><th>Noms des proteins </th><th> Type de nom </th><th> Genre de nom</th><tr>");
 
        
@@ -205,7 +205,7 @@
 
         oci_execute($ordre);
 
-        print("<h2> Informations sur le gène :</h2><br>");
+        print("<h2> Informations sur les gènes :</h2><br>");
         print("<table  id='gene' width=70%  border='1'><tr><th>Nom des gènes</th><th> Type de nom </th><tr>");
 
        
