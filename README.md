@@ -43,18 +43,19 @@ Option Bio-Informatique
 # Remplissage des tables
 
 * Paramétrer le fichier config.txt
-`cd resources; mv config_template.txt config.txt`
+`cd resources; cp config_template.txt config.txt`
 
 * Exécuter le main du programme
 `python mainUniprot.py`
 
 # Utilisation de l'interface web
 
+* Paramétrer le fichier config.php
+`cd html; cp config_template.php config.php`
+
 * Copie dans le dossier du serveur
 `cp -r html ~/public_html`
 `mv ~/public_html/html ~/public_html/uniprot`
-
-* Configuration de Oracle : Éditez le fichier config.php
 
 * Connexion à la page web
 `https://tp-ssh1.dep-informatique.u-psud.fr/~logincourt/uniprot`
@@ -70,6 +71,10 @@ et vidage des tables. Ainsi que ceux de requête et de test.
 
 * Le dossier html contient le code source HTML/PHP du site web.
 Le point d'entrée du site web est la page index.php.
+
+* Les fichiers de configuration resources/config.txt et html/config.php sont 
+ignorés par git. Des templates de leur forme sont fournis et ne doivent pas être 
+directement modifiés.
 
 # Organisation du travail
 
