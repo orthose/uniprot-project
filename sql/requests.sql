@@ -74,3 +74,74 @@ WHERE
   AND dbref.db_type = 'GO'
 GROUP BY dbref.db_ref
 HAVING COUNT(dbref.accession) >= 2;
+
+-- Requete soutenance
+
+SELECT Prot_name_2_prot.accession, Protein_names.prot_name
+FROM Protein_names, Prot_name_2_prot
+WHERE 
+    Protein_names.name_kind = 'recommendedName'
+    AND Protein_names.prot_name_id = Prot_name_2_prot.prot_name_id
+    AND (Prot_name_2_prot.accession
+IN 
+((SELECT Entries_2_keywords.accession
+FROM Keywords, Entries_2_keywords
+WHERE
+    Keywords.kw_label LIKE '%Nucleotide-binding%'
+    AND Keywords.kw_id = Entries_2_keywords.kw_id)
+INTERSECT
+(SELECT Entries_2_keywords.accession
+FROM Keywords, Entries_2_keywords
+WHERE
+    Keywords.kw_label LIKE '%Reference proteome%'
+    AND Keywords.kw_id = Entries_2_keywords.kw_id)))
+
+(SELECT Prot_name_2_prot.accession, Protein_names.prot_name
+FROM 
+    Keywords, Entries_2_keywords, 
+    Protein_names, Prot_name_2_prot
+WHERE
+    Keywords.kw_label LIKE '%Nucleotide-binding%'
+    AND Keywords.kw_id = Entries_2_keywords.kw_id
+    AND Entries_2_keywords.accession = Prot_name_2_prot.accession
+    AND Protein_names.prot_name_id = Prot_name_2_prot.prot_name_id
+    AND Protein_names.name_kind = 'recommendedName')
+INTERSECT
+(SELECT Prot_name_2_prot.accession, Protein_names.prot_name
+FROM 
+    Keywords, Entries_2_keywords,
+    Protein_names, Prot_name_2_prot
+WHERE
+    Keywords.kw_label LIKE '%Reference proteome%'
+    AND Keywords.kw_id = Entries_2_keywords.kw_id
+    AND Entries_2_keywords.accession = Prot_name_2_prot.accession
+    AND Protein_names.prot_name_id = Prot_name_2_prot.prot_name_id
+    AND Protein_names.name_kind = 'recommendedName')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
